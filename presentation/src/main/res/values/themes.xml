@@ -13,4 +13,16 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="note_title" parent="Widget.AppCompat.TextView">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/light_theme_font</item>
+    </style>
+
+    <style name="note_description" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/light_theme_font</item>
+    </style>
+
 </resources>
