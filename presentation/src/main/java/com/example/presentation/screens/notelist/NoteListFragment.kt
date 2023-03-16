@@ -4,15 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
+import com.example.notes.R
 import com.example.notes.databinding.FragmentNoteListBinding
 import com.example.presentation.models.Note
 import com.example.presentation.utils.CalendarConverter
 import com.google.android.material.snackbar.Snackbar
-import java.sql.Date
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -31,6 +31,7 @@ class NoteListFragment : Fragment() {
         ItemTouchHelper(simpleCallback)
     }
 
+    var notes = mutableListOf<Note>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -85,7 +86,7 @@ class NoteListFragment : Fragment() {
             }
         )
 
-        val notes = mutableListOf(
+        notes = mutableListOf(
             Note(0, "Title 1", "Description 1", CalendarConverter.convertToShow(dates[0])),
             Note(1, "Title 2", "Description 2", CalendarConverter.convertToShow(dates[1])),
             Note(2, "Title 3", "Description 3", CalendarConverter.convertToShow(dates[2])),
@@ -95,12 +96,24 @@ class NoteListFragment : Fragment() {
             Note(6, "Title 7", "Description 7", CalendarConverter.convertToShow(dates[6])),
         )
 
+
+
         adapter = NoteItemAdapter(notes)
         binding.recyclerView.adapter = adapter
+
 
         itemTouchHelper.attachToRecyclerView(binding.recyclerView)
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if(notes.isEmpty()) {
+            view.findNavController().navigate(
+                R.id.action_noteListFragment_to_emptyFragment
+            )
+        }
     }
 
     private fun setCreateNoteButtonHandler() {

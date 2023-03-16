@@ -3,7 +3,10 @@ package com.example.presentation.screens.notelist
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
+import com.example.notes.R
 
 import com.example.notes.databinding.FragmentItemBinding
 import com.example.presentation.models.Note
@@ -17,16 +20,26 @@ class NoteItemAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         holder = ViewHolder(
             FragmentItemBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
+                LayoutInflater.from(parent.context), parent, false
             )
         )
+
         return holder
     }
 
+    private fun bindNavigationToNoteFragment(note: Note) {
+        holder.itemView.setOnClickListener {
+            it.findNavController().navigate(
+                R.id.action_noteListFragment_to_noteFragment,
+                bundleOf(NOTE_KEY to note)
+            )
+        }
+    }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(notes[position])
+        val note = notes[position]
+        holder.bind(note)
+        bindNavigationToNoteFragment(note)
     }
 
     override fun getItemCount(): Int = notes.size
@@ -56,12 +69,15 @@ class NoteItemAdapter(
             tvChangeDate.text = note.dateOfChange
         }
     }
+
+    companion object {
+        const val NOTE_KEY = "NOTE_KEY"
+    }
 }
 
 
 class MyDiffUtil(
-    private val oldList: List<Note>,
-    private val newList: List<Note>
+    private val oldList: List<Note>, private val newList: List<Note>
 ) : DiffUtil.Callback() {
 
     override fun getOldListSize(): Int = oldList.size
