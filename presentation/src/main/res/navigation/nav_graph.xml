@@ -35,5 +35,10 @@
         android:label="fragment_empty"
         tools:layout="@layout/fragment_empty">
 
+        <action
+            android:id="@+id/action_emptyFragment_to_noteListFragment"
+            app:destination="@id/noteListFragment"
+            app:popUpTo="@+id/nav_graph"
+            app:popUpToInclusive="true"/>
     </fragment>
 </navigation>

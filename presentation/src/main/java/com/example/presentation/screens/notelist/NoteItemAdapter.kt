@@ -23,7 +23,6 @@ class NoteItemAdapter(
                 LayoutInflater.from(parent.context), parent, false
             )
         )
-
         return holder
     }
 

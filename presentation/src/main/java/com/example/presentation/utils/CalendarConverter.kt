@@ -4,7 +4,7 @@ import java.util.*
 
 object CalendarConverter {
 
-    fun convertToShow(dateOfChange: Calendar): String {
+    fun convertToString(dateOfChange: Calendar): String {
         val currentDate = getCurrentCalendar()
 
         return if (dateOfChange.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR)

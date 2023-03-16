@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.notes.R
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
-class SwipeGesture(private val adapter: NoteItemAdapter) :
+class SwipeGesture(private val viewModel: NoteListViewModel) :
     ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
     private val removeIcon = R.drawable.ic_remove
@@ -21,7 +21,8 @@ class SwipeGesture(private val adapter: NoteItemAdapter) :
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.bindingAdapterPosition
-        adapter.removeFromPosition(position)
+        //adapter.removeFromPosition(position)
+        viewModel.removeNote(position)
     }
 
     override fun onChildDraw(

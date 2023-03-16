@@ -2,11 +2,23 @@ package com.example.presentation.screens.note
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.domain.usecases.SaveNoteUseCase
+import com.example.presentation.mappers.NoteMapper
 import com.example.presentation.models.Note
+import kotlinx.coroutines.launch
 
-class NoteViewModel: ViewModel() {
+class NoteViewModel(
+    private val saveNoteUseCase: SaveNoteUseCase
+) : ViewModel() {
 
-    var note: MutableLiveData<Note> = MutableLiveData(Note(0, "Title 1", "Description 1", "15.03.2023"))
+    private val mapper: NoteMapper = NoteMapper()
+    var note: MutableLiveData<Note> = MutableLiveData()
     var wasFragmentShown = false
-    //var wasNoteLoaded = false
+
+    fun saveNote() {
+        viewModelScope.launch {
+            saveNoteUseCase.execute(mapper.mapToDomain(note.value!!))
+        }
+    }
 }
