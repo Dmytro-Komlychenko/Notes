@@ -52,7 +52,8 @@ class MainActivity : AppCompatActivity() {
 
         navHostFragment.navController
             .addOnDestinationChangedListener { controller, destination, arguments ->
-                binding.fabCreateNote.isVisible = destination.id != R.id.noteFragment
+                binding.fabCreateNote.isVisible =
+                    (destination.id != R.id.noteFragment && destination.id != R.id.noInternetFragment)
             }
 
         viewModel.notes.observe(this) {
@@ -68,7 +69,11 @@ class MainActivity : AppCompatActivity() {
             applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         networkCallback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
-                Log.d("MyFragment", "Internet connection available")
+                runOnUiThread {
+                    viewModel.isInternetConnection.value = true
+                }
+
+                Log.d("internet", "Internet connection available")
                 if (navHostFragment.navController.currentDestination?.id != R.id.noInternetFragment) return
                 runOnUiThread {
                     startNoteListFragmentFromNoInternet()
@@ -81,8 +86,9 @@ class MainActivity : AppCompatActivity() {
             override fun onLost(network: Network) {
                 viewModel.stopLoading()
                 runOnUiThread {
-                    viewModel.internetConnectionLost.value = true
+                    viewModel.isInternetConnection.value = false
                 }
+
                 if (!viewModel.isFirstLaunchApp!!) {
                     Toast.makeText(
                         applicationContext,
@@ -94,7 +100,7 @@ class MainActivity : AppCompatActivity() {
                         startNoInternetFragment()
                     }
                 }
-                Log.d("MyFragment", "Internet connection lost")
+                Log.d("internet", "Internet connection lost")
             }
         }
         connectivityManager.registerDefaultNetworkCallback(networkCallback)
@@ -104,7 +110,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        if (!isInternetConnected(this)) {
+        if (!isInternetConnected(this) && viewModel.isFirstLaunchApp!!) {
             viewModel.stopLoading()
             startNoInternetFragment()
         }

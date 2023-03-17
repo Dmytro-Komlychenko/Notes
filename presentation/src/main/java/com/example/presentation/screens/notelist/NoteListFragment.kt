@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.notes.databinding.FragmentNoteListBinding
 import com.example.presentation.models.Note
 import com.example.presentation.screens.note.NoteFragment
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -46,20 +47,27 @@ class NoteListFragment : Fragment() {
             binding.pbLoading.isVisible = false
 
 
+            var job: Job? = null
+            binding.pbProgress.isVisible = false
 
-
-            val job = lifecycleScope.launch {
-                for(i in 0  until 5000) {
-                    binding.pbProgress.progress += 1
-                    delay(1)
+            viewModel.isInternetConnection.observe(viewLifecycleOwner) {
+                if (it) {
+                    binding.pbProgress.isVisible = true
+                    job = lifecycleScope.launch {
+                        binding.pbProgress.progress = 0
+                        for (i in 0 until 5000) {
+                            binding.pbProgress.progress += 1
+                            delay(1)
+                        }
+                        binding.pbProgress.isVisible = false
+                    }
+                } else {
+                    binding.pbProgress.isVisible = false
+                    job?.cancel()
+                    job = null
                 }
-                binding.pbProgress.isVisible = false
-            }
 
-            viewModel.internetConnectionLost.observe(viewLifecycleOwner) {
-                job.cancel()
 
-                binding.pbProgress.isVisible = false
             }
 
             binding.recyclerView.isVisible = true

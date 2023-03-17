@@ -26,7 +26,7 @@ class NoteListViewModel(
     private val responseMapper = ResponseMapper()
     var toAdd: Boolean = false
     var removePosition: Int? = null
-    val internetConnectionLost: MutableLiveData<Boolean> = MutableLiveData()
+    val isInternetConnection: MutableLiveData<Boolean> = MutableLiveData()
     private var loadJob: Job? = null
     var isFirstLaunchApp: Boolean? = null
 
