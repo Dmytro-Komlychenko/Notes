@@ -82,7 +82,6 @@ class MainActivity : AppCompatActivity() {
                 viewModel.stopLoading()
                 runOnUiThread {
                     viewModel.internetConnectionLost.value = true
-                    startNoInternetFragment()
                 }
                 if (!viewModel.isFirstLaunchApp!!) {
                     Toast.makeText(
@@ -90,6 +89,10 @@ class MainActivity : AppCompatActivity() {
                         "Internet connection lost",
                         Toast.LENGTH_SHORT
                     ).show()
+                } else {
+                    runOnUiThread {
+                        startNoInternetFragment()
+                    }
                 }
                 Log.d("MyFragment", "Internet connection lost")
             }
