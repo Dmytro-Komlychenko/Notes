@@ -1,7 +1,10 @@
 package com.example.presentation.di
 
 import android.content.Context
-import com.example.data.repositories.NoteRepository
+import com.example.data.repositories.NoteDBRepository
+import com.example.data.repositories.NoteEthernetRepository
+import com.example.data.repositories.IsFirstLaunchAppRepository
+import com.example.data.storage.sharedprefs.SharedPrefsIsFirstTimeLaunch
 import dagger.Module
 import dagger.Provides
 
@@ -9,7 +12,22 @@ import dagger.Provides
 class DataModule {
 
     @Provides
-    fun provideNoteRepository(context: Context): NoteRepository {
-        return NoteRepository(applicationContext = context)
+    fun provideNoteDBRepository(context: Context): NoteDBRepository {
+        return NoteDBRepository(applicationContext = context)
+    }
+
+    @Provides
+    fun provideNoteEthernetRepository(): NoteEthernetRepository {
+        return NoteEthernetRepository()
+    }
+
+    @Provides
+    fun provideIsFirstLaunchAppRepository(sharedPrefsIsFirstTimeLaunch: SharedPrefsIsFirstTimeLaunch): IsFirstLaunchAppRepository {
+        return IsFirstLaunchAppRepository(sharedPrefsIsFirstTimeLaunch = sharedPrefsIsFirstTimeLaunch)
+    }
+
+    @Provides
+    fun provideSharedPrefsIsFirstTimeLaunch(context: Context): SharedPrefsIsFirstTimeLaunch {
+        return SharedPrefsIsFirstTimeLaunch(context = context)
     }
 }

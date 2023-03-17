@@ -3,13 +3,13 @@ package com.example.presentation.screens.note
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.usecases.SaveNoteUseCase
+import com.example.domain.usecases.SaveNoteDBUseCase
 import com.example.presentation.mappers.NoteMapper
 import com.example.presentation.models.Note
 import kotlinx.coroutines.launch
 
 class NoteViewModel(
-    private val saveNoteUseCase: SaveNoteUseCase
+    private val saveNoteDBUseCase: SaveNoteDBUseCase
 ) : ViewModel() {
 
     private val mapper: NoteMapper = NoteMapper()
@@ -18,7 +18,7 @@ class NoteViewModel(
 
     fun saveNote() {
         viewModelScope.launch {
-            saveNoteUseCase.execute(mapper.mapToDomain(note.value!!))
+            saveNoteDBUseCase.execute(mapper.mapToDomain(note.value!!))
         }
     }
 }

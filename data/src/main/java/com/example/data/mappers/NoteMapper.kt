@@ -14,9 +14,9 @@ class NoteMapper {
         )
     }
 
-    fun mapFromEntity(noteEntities: List<NoteEntity>): List<Note> {
+    fun mapFromEntity(noteEntities: List<NoteEntity>?): List<Note> {
         val notes = mutableListOf<Note>()
-        noteEntities.forEach { note -> notes.add(mapFromEntity(note)) }
+        noteEntities?.forEach { note -> notes.add(mapFromEntity(note)) }
         return notes
     }
 
@@ -27,5 +27,11 @@ class NoteMapper {
             description = note.description,
             dateOfChange = note.dateOfChange,
         )
+    }
+
+    fun mapToEntity(notes: List<Note>): List<NoteEntity> {
+        val notesEntities = mutableListOf<NoteEntity>()
+        notes.forEach { note -> notesEntities.add(mapToEntity(note)) }
+        return notesEntities
     }
 }

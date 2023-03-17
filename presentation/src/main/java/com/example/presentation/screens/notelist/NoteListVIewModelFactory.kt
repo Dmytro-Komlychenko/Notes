@@ -2,21 +2,27 @@ package com.example.presentation.screens.notelist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.domain.usecases.GetNotesUseCase
-import com.example.domain.usecases.RemoveNoteUseCase
-import com.example.domain.usecases.SaveNoteUseCase
+import com.example.domain.usecases.*
 
 class NoteListViewModelFactory(
-    private val getNotesUseCase: GetNotesUseCase,
-    private val saveNoteUseCase: SaveNoteUseCase,
-    private val removeNoteUseCase: RemoveNoteUseCase,
+    private val getNotesDBUseCase: GetNotesDBUseCase,
+    private val saveNoteDBUseCase: SaveNoteDBUseCase,
+    private val saveNotesDBUseCase: SaveNotesDBUseCase,
+    private val removeNoteDBUseCase: RemoveNoteDBUseCase,
+    private val getEthernetNotesUseCase: GetEthernetNotesUseCase,
+    private val isFirstLaunchAppUseCase: IsFirstLaunchAppUseCase,
+    private val firstLaunchAppUseCase: FirstLaunchAppUseCase,
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return NoteListViewModel(
-            getNotesUseCase = getNotesUseCase,
-            saveNoteUseCase = saveNoteUseCase,
-            removeNoteUseCase = removeNoteUseCase,
+            getNotesDBUseCase = getNotesDBUseCase,
+            saveNoteDBUseCase = saveNoteDBUseCase,
+            saveNotesDBUseCase = saveNotesDBUseCase,
+            removeNoteDBUseCase = removeNoteDBUseCase,
+            getEthernetNotesUseCase = getEthernetNotesUseCase,
+            isFirstLaunchAppUseCase = isFirstLaunchAppUseCase,
+            firstLaunchAppUseCase = firstLaunchAppUseCase,
         ) as T
     }
 

@@ -5,9 +5,9 @@ import com.example.data.mappers.NoteMapper
 import com.example.data.storage.dao.NoteDao
 import com.example.data.storage.database.NoteDB
 import com.example.domain.models.Note
-import com.example.domain.repositoriesI.NoteRepositoryI
+import com.example.domain.repositoriesI.NoteDBRepositoryI
 
-class NoteRepository(applicationContext: Context) : NoteRepositoryI {
+class NoteDBRepository(applicationContext: Context) : NoteDBRepositoryI {
 
     private val noteMapper = NoteMapper()
 
@@ -19,8 +19,14 @@ class NoteRepository(applicationContext: Context) : NoteRepositoryI {
         return noteMapper.mapFromEntity(noteDao.getAllNotes())
     }
 
+
     override suspend fun insertNote(note: Note) {
         noteDao.insertNote(noteMapper.mapToEntity(note))
+    }
+
+    override suspend fun insertNotes(notes: List<Note>) {
+        val res = noteMapper.mapToEntity(notes)
+        noteDao.insertNotes(res)
     }
 
     override suspend fun removeNote(id: Int) {

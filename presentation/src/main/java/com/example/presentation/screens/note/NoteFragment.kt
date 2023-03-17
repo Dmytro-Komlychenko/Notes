@@ -55,6 +55,7 @@ class NoteFragment : Fragment() {
 
             binding.etTitle.setText(it.title)
             binding.etDescription.setText(it.description)
+            binding.tvChangeDate.text = it.dateOfChange
             setVisibilityButtonSaveHandler(binding.etTitle)
             setVisibilityButtonSaveHandler(binding.etDescription)
         }
@@ -119,7 +120,7 @@ class NoteFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        setFragmentResult(NOTE_FRAGMENT_FINISH, bundleOf(NOTE_FRAGMENT_FINISH to true))
+        setFragmentResult(NOTE_FRAGMENT_FINISH, bundleOf(NOTE_FRAGMENT_FINISH to viewModel.note.value))
     }
 
     companion object {

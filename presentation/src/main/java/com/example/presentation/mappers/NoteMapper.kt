@@ -13,9 +13,9 @@ class NoteMapper {
         )
     }
 
-    fun mapFromDomain(noteEntities: List<com.example.domain.models.Note>): MutableList<Note> {
+    fun mapFromDomain(noteEntities: List<com.example.domain.models.Note>?): MutableList<Note> {
         val notes = mutableListOf<Note>()
-        noteEntities.forEach { note -> notes.add(mapFromDomain(note)) }
+        noteEntities?.forEach { note -> notes.add(mapFromDomain(note)) }
         return notes
     }
 
@@ -26,5 +26,11 @@ class NoteMapper {
             description = note.description,
             dateOfChange = note.dateOfChange,
         )
+    }
+
+    fun mapToDomain(notes: List<Note>): List<com.example.domain.models.Note> {
+        val notesDomain = mutableListOf<com.example.domain.models.Note>()
+        notes.forEach { note -> notesDomain.add(mapToDomain(note)) }
+        return notesDomain
     }
 }

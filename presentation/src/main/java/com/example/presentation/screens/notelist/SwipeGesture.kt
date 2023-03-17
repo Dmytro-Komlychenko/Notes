@@ -21,7 +21,6 @@ class SwipeGesture(private val viewModel: NoteListViewModel) :
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.bindingAdapterPosition
-        //adapter.removeFromPosition(position)
         viewModel.removeNote(position)
     }
 

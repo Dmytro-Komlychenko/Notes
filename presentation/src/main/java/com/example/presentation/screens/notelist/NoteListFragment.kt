@@ -1,16 +1,21 @@
 package com.example.presentation.screens.notelist
 
+import android.os.Build
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.findNavController
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
-import com.example.notes.R
 import com.example.notes.databinding.FragmentNoteListBinding
+import com.example.presentation.models.Note
 import com.example.presentation.screens.note.NoteFragment
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class NoteListFragment : Fragment() {
@@ -26,22 +31,40 @@ class NoteListFragment : Fragment() {
 
     private val viewModel: NoteListViewModel by activityViewModels()
 
+    private inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? = when {
+        Build.VERSION.SDK_INT >= 33 -> getParcelable(key, T::class.java)
+        else -> @Suppress("DEPRECATION") getParcelable(key) as? T
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentNoteListBinding.inflate(layoutInflater)
 
-        parentFragmentManager.setFragmentResultListener(NoteFragment.NOTE_FRAGMENT_FINISH, this) { requestKey, result ->
-            val value = result.getBoolean(NoteFragment.NOTE_FRAGMENT_FINISH)
-            if (value) initAdapter()
-        }
-
         viewModel.notes.observe(viewLifecycleOwner) {
-            if (viewModel.notes.value!!.isEmpty()) {
-                viewModel.removePosition = null
-                startEmptyFragment(binding.recyclerView)
-                return@observe
+
+            binding.pbLoading.isVisible = false
+
+
+
+
+            val job = lifecycleScope.launch {
+                for(i in 0  until 5000) {
+                    binding.pbProgress.progress += 1
+                    delay(1)
+                }
+                binding.pbProgress.isVisible = false
             }
+
+            viewModel.internetConnectionLost.observe(viewLifecycleOwner) {
+                job.cancel()
+
+                binding.pbProgress.isVisible = false
+            }
+
+            binding.recyclerView.isVisible = true
+
+            if (viewModel.notes.value!!.isEmpty()) return@observe
 
             if (adapter == null) {
                 initAdapter()
@@ -59,6 +82,23 @@ class NoteListFragment : Fragment() {
             }
         }
 
+
+        parentFragmentManager.setFragmentResultListener(
+            NoteFragment.NOTE_FRAGMENT_FINISH,
+            this
+        ) { requestKey, result ->
+            val value = result.parcelable<Note>(NoteFragment.NOTE_FRAGMENT_FINISH)
+            viewModel.notes.value?.find { note -> note.id == value?.id }?.apply {
+                title = value?.title.toString()
+                description = value?.description.toString()
+            }
+
+            if (value != null) {
+                adapter?.updateNoteValue(value)
+                binding.recyclerView.adapter = adapter
+            }
+        }
+
         return binding.root
     }
 
@@ -68,12 +108,6 @@ class NoteListFragment : Fragment() {
         itemTouchHelper = ItemTouchHelper(simpleCallback)
         binding.recyclerView.adapter = adapter
         itemTouchHelper.attachToRecyclerView(binding.recyclerView)
-    }
-
-    private fun startEmptyFragment(view: View) {
-        view.findNavController().navigate(
-            R.id.action_noteListFragment_to_emptyFragment
-        )
     }
 
     override fun onDestroyView() {

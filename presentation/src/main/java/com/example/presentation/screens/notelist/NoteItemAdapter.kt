@@ -16,7 +16,6 @@ class NoteItemAdapter(
 ) : RecyclerView.Adapter<NoteItemAdapter.ViewHolder>() {
 
     private lateinit var holder: ViewHolder
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         holder = ViewHolder(
             FragmentItemBinding.inflate(
@@ -50,6 +49,14 @@ class NoteItemAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
+    fun updateNoteValue(value: Note) {
+        notes.find { note -> note.id == value.id }?.apply {
+            title = value.title
+            description = value.description
+        }
+        holder.bind(value)
+    }
+
     fun removeFromPosition(position: Int) {
         val note = notes[position]
         val diffUtil = MyDiffUtil(notes, notes - note)
@@ -67,6 +74,7 @@ class NoteItemAdapter(
             tvDescription.text = note.description
             tvChangeDate.text = note.dateOfChange
         }
+
     }
 
     companion object {

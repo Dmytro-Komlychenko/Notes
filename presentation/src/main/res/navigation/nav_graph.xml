@@ -17,6 +17,10 @@
             app:destination="@id/emptyFragment"
             app:popUpTo="@+id/nav_graph"
             app:popUpToInclusive="true"/>
+
+        <action
+            android:id="@+id/action_noteListFragment_to_noInternetFragment"
+            app:destination="@id/noInternetFragment" />
     </fragment>
 
     <fragment
@@ -40,5 +44,14 @@
             app:destination="@id/noteListFragment"
             app:popUpTo="@+id/nav_graph"
             app:popUpToInclusive="true"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/noInternetFragment"
+        android:name="com.example.presentation.screens.nointernet.NoInternetFragment"
+        android:label="NoInternetFragment" >
+        <action
+            android:id="@+id/action_noInternetFragment_to_noteListFragment"
+            app:destination="@id/noteListFragment" />
     </fragment>
 </navigation>

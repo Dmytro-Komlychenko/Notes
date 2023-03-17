@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:background="@color/light_brown"
@@ -8,19 +9,38 @@
     tools:context="com.example.presentation.screens.note.NoteFragment">
 
     <EditText
-        android:maxLength="100"
         android:id="@+id/et_title"
         style="@style/note_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/title" />
+        android:hint="@string/title"
+        android:maxLength="100"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:maxLength="2000"
+        android:layout_margin="4dp"
+        android:background="@android:color/transparent"
+        android:gravity="top|start"
         android:id="@+id/et_description"
         style="@style/note_description"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/note" />
+        android:layout_height="0dp"
+        android:hint="@string/note"
+        android:maxLength="2000"
+        app:layout_constraintBottom_toTopOf="@+id/tv_change_date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_title" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/tv_change_date"
+        android:textAlignment="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

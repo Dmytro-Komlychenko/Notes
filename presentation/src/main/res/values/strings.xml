@@ -5,4 +5,6 @@
     <string name="title">Title</string>
     <string name="note">Note</string>
     <string name="no_notes">No notes</string>
+    <string name="save">Save</string>
+    <string name="no_internet">No internet</string>
 </resources>
