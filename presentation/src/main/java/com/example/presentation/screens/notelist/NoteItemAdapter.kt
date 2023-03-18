@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.DiffUtil
 import com.example.notes.R
 
 import com.example.notes.databinding.FragmentItemBinding
+import com.example.presentation.models.DateTime
 import com.example.presentation.models.Note
+import kotlinx.coroutines.*
 
 class NoteItemAdapter(
     private val notes: MutableList<Note>
@@ -72,13 +74,20 @@ class NoteItemAdapter(
         fun bind(note: Note) = with(binding) {
             tvTitle.text = note.title
             tvDescription.text = note.description
-            tvChangeDate.text = note.dateOfChange
-        }
+            tvChangeDate.text = note.dateOfChange.value
 
+            CoroutineScope(Dispatchers.Default).launch {
+                if (note.subscribeDayPassed()) {
+                    tvChangeDate.text =
+                        DateTime.convertCalendarToString(DateTime.convertStringToCalendar(note.dateOfChange.value))
+                }
+            }
+        }
     }
 
     companion object {
         const val NOTE_KEY = "NOTE_KEY"
+
     }
 }
 

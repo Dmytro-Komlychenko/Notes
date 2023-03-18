@@ -1,5 +1,7 @@
 package com.example.presentation.mappers
 
+import androidx.lifecycle.MutableLiveData
+import com.example.presentation.models.DateTime
 import com.example.presentation.models.Note
 
 class NoteMapper {
@@ -9,7 +11,7 @@ class NoteMapper {
             id = noteEntity.id,
             title = noteEntity.title,
             description = noteEntity.description,
-            dateOfChange = noteEntity.dateOfChange,
+            dateOfChange = DateTime(noteEntity.dateOfChange),
         )
     }
 
@@ -24,7 +26,7 @@ class NoteMapper {
             id = note.id,
             title = note.title,
             description = note.description,
-            dateOfChange = note.dateOfChange,
+            dateOfChange = note.dateOfChange.value,
         )
     }
 

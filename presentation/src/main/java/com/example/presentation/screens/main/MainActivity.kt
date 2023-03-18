@@ -15,10 +15,10 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.notes.R
 import com.example.notes.databinding.ActivityMainBinding
 import com.example.presentation.app.App
+import com.example.presentation.models.DateTime
 import com.example.presentation.models.Note
 import com.example.presentation.screens.notelist.NoteListViewModel
 import com.example.presentation.screens.notelist.NoteListViewModelFactory
-import com.example.presentation.utils.CalendarConverter
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -169,7 +169,7 @@ class MainActivity : AppCompatActivity() {
                     newId,
                     "Новая заметка",
                     "",
-                    CalendarConverter.convertToString(CalendarConverter.getCurrentCalendar())
+                    DateTime(DateTime.convertCalendarToString(DateTime.getCurrentCalendar()))
                 )
             viewModel.addNote(newNote)
         }

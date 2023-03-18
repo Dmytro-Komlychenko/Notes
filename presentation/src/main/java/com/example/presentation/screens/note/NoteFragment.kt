@@ -14,8 +14,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.notes.R
 import com.example.notes.databinding.FragmentNoteBinding
 import com.example.presentation.app.App
+import com.example.presentation.models.DateTime
 import com.example.presentation.screens.notelist.NoteItemAdapter
-import com.example.presentation.utils.CalendarConverter
 import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
 
@@ -55,7 +55,7 @@ class NoteFragment : Fragment() {
 
             binding.etTitle.setText(it.title)
             binding.etDescription.setText(it.description)
-            binding.tvChangeDate.text = it.dateOfChange
+            binding.tvChangeDate.text = it.dateOfChange.value
             setVisibilityButtonSaveHandler(binding.etTitle)
             setVisibilityButtonSaveHandler(binding.etDescription)
         }
@@ -77,7 +77,7 @@ class NoteFragment : Fragment() {
                 viewModel.note.value?.apply {
                     title = binding.etTitle.text.toString()
                     description = binding.etDescription.text.toString()
-                    dateOfChange = CalendarConverter.convertToString(CalendarConverter.getCurrentCalendar())
+                    dateOfChange = DateTime(DateTime.convertCalendarToString(DateTime.getCurrentCalendar()))
                 }
                 viewModel.saveNote()
                 menuActionSave?.isVisible = false
