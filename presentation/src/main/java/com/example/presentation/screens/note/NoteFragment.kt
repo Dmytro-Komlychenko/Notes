@@ -17,6 +17,9 @@ import com.example.presentation.app.App
 import com.example.presentation.models.DateTime
 import com.example.presentation.screens.notelist.NoteItemAdapter
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -31,6 +34,7 @@ class NoteFragment : Fragment() {
 
     @Inject
     lateinit var numberViewModelFactory: NoteViewModelFactory
+
 
     private inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? = when {
         SDK_INT >= 33 -> getParcelable(key, T::class.java)
@@ -59,6 +63,14 @@ class NoteFragment : Fragment() {
             setVisibilityButtonSaveHandler(binding.etTitle)
             setVisibilityButtonSaveHandler(binding.etDescription)
         }
+
+        viewModel.dateTimeScope.launch {
+            if (viewModel.note.value!!.subscribeDayPassed()) {
+                binding.tvChangeDate.text =
+                    DateTime.convertCalendarToString(DateTime.convertStringToCalendar(viewModel.note.value!!.dateOfChange.value))
+            }
+        }
+
         return binding.root
     }
 

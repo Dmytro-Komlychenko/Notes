@@ -67,16 +67,22 @@ class NoteItemAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        holder.dateTimeScope.cancel()
+    }
 
     inner class ViewHolder(private val binding: FragmentItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+        val dateTimeScope = CoroutineScope(Dispatchers.Default)
 
         fun bind(note: Note) = with(binding) {
             tvTitle.text = note.title
             tvDescription.text = note.description
             tvChangeDate.text = note.dateOfChange.value
 
-            CoroutineScope(Dispatchers.Default).launch {
+            dateTimeScope.launch {
                 if (note.subscribeDayPassed()) {
                     tvChangeDate.text =
                         DateTime.convertCalendarToString(DateTime.convertStringToCalendar(note.dateOfChange.value))

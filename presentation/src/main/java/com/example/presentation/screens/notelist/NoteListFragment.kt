@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.notes.databinding.FragmentNoteListBinding
@@ -17,7 +18,6 @@ import com.example.presentation.screens.note.NoteFragment
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
 
 class NoteListFragment : Fragment() {
 
@@ -31,6 +31,8 @@ class NoteListFragment : Fragment() {
     private lateinit var itemTouchHelper: ItemTouchHelper
 
     private val viewModel: NoteListViewModel by activityViewModels()
+    lateinit var internetObserver: Observer<Boolean>
+    var progressJob: Job? = null
 
     private inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? = when {
         Build.VERSION.SDK_INT >= 33 -> getParcelable(key, T::class.java)
@@ -47,13 +49,13 @@ class NoteListFragment : Fragment() {
             binding.pbLoading.isVisible = false
 
 
-            var job: Job? = null
+
             binding.pbProgress.isVisible = false
 
-            viewModel.isInternetConnection.observe(viewLifecycleOwner) {
+            internetObserver = Observer {
                 if (it) {
                     binding.pbProgress.isVisible = true
-                    job = lifecycleScope.launch {
+                    progressJob = lifecycleScope.launch {
                         binding.pbProgress.progress = 0
                         for (i in 0 until 5000) {
                             binding.pbProgress.progress += 1
@@ -63,12 +65,12 @@ class NoteListFragment : Fragment() {
                     }
                 } else {
                     binding.pbProgress.isVisible = false
-                    job?.cancel()
-                    job = null
+                    progressJob?.cancel()
+                    progressJob = null
                 }
-
-
             }
+
+            viewModel.isInternetConnection.observe(viewLifecycleOwner, internetObserver)
 
             binding.recyclerView.isVisible = true
 
@@ -110,6 +112,8 @@ class NoteListFragment : Fragment() {
         return binding.root
     }
 
+
+
     private fun initAdapter() {
         adapter = NoteItemAdapter(viewModel.notes.value!!.toMutableList())
         simpleCallback = SwipeGesture(viewModel)
@@ -118,8 +122,12 @@ class NoteListFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(binding.recyclerView)
     }
 
+
     override fun onDestroyView() {
         super.onDestroyView()
+        progressJob?.cancel()
+        viewModel.isInternetConnection.removeObserver(internetObserver)
         _binding = null
+
     }
 }
